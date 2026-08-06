@@ -106,10 +106,19 @@ export const mediaProviderEnum = pgEnum("media_provider", [
   "youtube",
   "external",
 ]);
-export const mediaRoleEnum = pgEnum("media_role", ["cover", "gallery", "video"]);
+export const mediaRoleEnum = pgEnum("media_role", [
+  "cover",
+  "gallery",
+  "video",
+]);
 export const allergySeverityEnum = pgEnum("allergy_severity", [
   "mild",
   "moderate",
   "severe",
 ]);
-export const photoPoseEnum = pgEnum("photo_pose", ["front", "side", "back", "other"]);
+export const photoPoseEnum = pgEnum("photo_pose", [
+  "front",
+  "side",
+  "back",
+  "other",
+]);

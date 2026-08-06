@@ -31,11 +31,19 @@ export const profiles = pgTable("profiles", {
   sex: biologicalSexEnum("sex"),
   heightCm: numeric("height_cm", { precision: 5, scale: 2 }),
   timezone: text("timezone").default("Africa/Johannesburg").notNull(),
-  preferredUnitSystem: unitSystemEnum("preferred_unit_system").default("metric").notNull(),
+  preferredUnitSystem: unitSystemEnum("preferred_unit_system")
+    .default("metric")
+    .notNull(),
   preferredWorkoutTime: time("preferred_workout_time"),
-  onboardingCompletedAt: timestamp("onboarding_completed_at", { withTimezone: true }),
-  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  onboardingCompletedAt: timestamp("onboarding_completed_at", {
+    withTimezone: true,
+  }),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
 });
 
 export const userGoals = pgTable(
@@ -51,7 +59,9 @@ export const userGoals = pgTable(
     isPrimary: boolean("is_primary").default(false).notNull(),
     startsOn: date("starts_on").notNull(),
     endsOn: date("ends_on"),
-    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
   },
   (table) => [
     index("user_goals_user_id_idx").on(table.userId),
@@ -77,9 +87,16 @@ export const userTargets = pgTable(
     stepTarget: integer("step_target").notNull(),
     creatineTargetG: numeric("creatine_target_g", { precision: 4, scale: 1 }),
     workoutDaysPerWeek: integer("workout_days_per_week").notNull(),
-    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
   },
-  (table) => [index("user_targets_user_effective_idx").on(table.userId, table.effectiveFrom)],
+  (table) => [
+    index("user_targets_user_effective_idx").on(
+      table.userId,
+      table.effectiveFrom,
+    ),
+  ],
 );
 
 export const dietaryPreferences = pgTable("dietary_preferences", {
@@ -98,7 +115,12 @@ export const userDietaryPreferences = pgTable(
       .notNull()
       .references(() => dietaryPreferences.id, { onDelete: "cascade" }),
   },
-  (table) => [uniqueIndex("user_dietary_preferences_unique").on(table.userId, table.dietaryPreferenceId)],
+  (table) => [
+    uniqueIndex("user_dietary_preferences_unique").on(
+      table.userId,
+      table.dietaryPreferenceId,
+    ),
+  ],
 );
 
 export const allergens = pgTable("allergens", {
@@ -120,7 +142,9 @@ export const userAllergens = pgTable(
     severity: allergySeverityEnum("severity").default("mild").notNull(),
     notes: text("notes"),
   },
-  (table) => [uniqueIndex("user_allergens_unique").on(table.userId, table.allergenId)],
+  (table) => [
+    uniqueIndex("user_allergens_unique").on(table.userId, table.allergenId),
+  ],
 );
 
 export const equipment = pgTable("equipment", {
@@ -142,5 +166,7 @@ export const userEquipment = pgTable(
     quantity: integer("quantity").default(1).notNull(),
     maximumWeightKg: numeric("maximum_weight_kg", { precision: 7, scale: 2 }),
   },
-  (table) => [uniqueIndex("user_equipment_unique").on(table.userId, table.equipmentId)],
+  (table) => [
+    uniqueIndex("user_equipment_unique").on(table.userId, table.equipmentId),
+  ],
 );
