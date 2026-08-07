@@ -12,6 +12,7 @@ import {
   workoutPlans,
 } from "@/db/schema";
 import { getWorkoutTemplate, starterExercises } from "@/lib/workout-catalog";
+import type { OnboardingInput } from "@/validation/onboarding";
 
 const focusExercises: Record<string, string[]> = {
   push: ["push-up", "dumbbell-floor-press", "shoulder-press", "lateral-raise"],
@@ -21,7 +22,7 @@ const focusExercises: Record<string, string[]> = {
   core: ["plank", "bicycle-crunch"],
 };
 
-function prescription(goalType: string, exerciseSlug: string) {
+function prescription(goalType: OnboardingInput["goalType"], exerciseSlug: string) {
   if (exerciseSlug === "plank") {
     return {
       targetSets: 3,
@@ -146,7 +147,7 @@ export async function generateStarterWorkoutPlan({
   daysPerWeek,
 }: {
   userId: string;
-  goalType: string;
+  goalType: OnboardingInput["goalType"];
   daysPerWeek: number;
 }) {
   const exerciseIds = await ensureStarterExerciseCatalog();
@@ -174,7 +175,7 @@ export async function generateStarterWorkoutPlan({
       userId,
       name: `${daysPerWeek}-Day ${goalType.replaceAll("_", " ")} Plan`,
       description: "Starter plan generated from onboarding goal, training frequency and available equipment.",
-      goalType: goalType as typeof workoutPlans.$inferInsert.goalType,
+      goalType,
       daysPerWeek,
       status: "active",
       startsOn: new Date(),
