@@ -23,6 +23,22 @@ export async function startWorkoutSession(formData: FormData) {
   const workoutDayId = String(formData.get("workoutDayId") ?? "");
   if (!workoutDayId) throw new Error("Workout day is required");
 
+  const [existingSession] = await db
+    .select({ id: workoutSessions.id })
+    .from(workoutSessions)
+    .where(
+      and(
+        eq(workoutSessions.userId, session.user.id),
+        eq(workoutSessions.workoutDayId, workoutDayId),
+        eq(workoutSessions.status, "in_progress"),
+      ),
+    )
+    .limit(1);
+
+  if (existingSession) {
+    redirect(`/workouts/session/${existingSession.id}`);
+  }
+
   const [day] = await db
     .select({
       dayId: workoutDays.id,
@@ -116,18 +132,31 @@ export async function completeWorkoutSession(formData: FormData) {
       if (repsRaw === null && weightRaw === null && durationRaw === null) continue;
 
       const repetitions = repsRaw ? Number(repsRaw) : null;
-      const weightKg = weightRaw ? Number(weightRaw).toFixed(2) : null;
+      const weightNumber = weightRaw ? Number(weightRaw) : null;
       const durationSeconds = durationRaw ? Number(durationRaw) : null;
 
-      if (repetitions === null && weightKg === null && durationSeconds === null) continue;
+      const validRepetitions = repetitions !== null && Number.isFinite(repetitions) ? repetitions : null;
+      const validWeightKg = weightNumber !== null && Number.isFinite(weightNumber) ? weightNumber.toFixed(2) : null;
+      const validDurationSeconds =
+        durationSeconds !== null && Number.isFinite(durationSeconds)
+          ? durationSeconds
+          : null;
+
+      if (
+        validRepetitions === null &&
+        validWeightKg === null &&
+        validDurationSeconds === null
+      ) {
+        continue;
+      }
 
       await db.insert(exerciseSets).values({
         sessionExerciseId: exercise.id,
         setNumber,
         setType: "working",
-        repetitions: Number.isFinite(repetitions) ? repetitions : null,
-        weightKg,
-        durationSeconds: Number.isFinite(durationSeconds) ? durationSeconds : null,
+        repetitions: validRepetitions,
+        weightKg: validWeightKg,
+        durationSeconds: validDurationSeconds,
         completed: true,
       });
     }
