@@ -15,6 +15,7 @@ import {
   userGoals,
 } from "@/db/schema";
 import { auth } from "@/server/auth";
+import { generateStarterWorkoutPlan } from "@/server/services/workout-plan-service";
 import {
   dietaryOptions,
   equipmentOptions,
@@ -182,10 +183,11 @@ export async function completeOnboarding(formData: FormData) {
     }
   }
 
-  // Workout frequency is collected now and will feed the target/rules engine in
-  // the next increment. We intentionally avoid inventing calorie or nutrition
-  // prescriptions in this persistence action.
-  void input.workoutDaysPerWeek;
+  await generateStarterWorkoutPlan({
+    userId,
+    goalType: input.goalType,
+    daysPerWeek: input.workoutDaysPerWeek,
+  });
 
   redirect("/dashboard");
 }
