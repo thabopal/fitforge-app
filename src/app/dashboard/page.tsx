@@ -75,11 +75,19 @@ export default async function DashboardPage() {
           <MetricCard label="Primary goal" value={goalLabel} />
           <MetricCard
             label="Current weight"
-            value={latestMeasurement?.weightKg ? `${latestMeasurement.weightKg} kg` : "Not set"}
+            value={
+              latestMeasurement?.weightKg
+                ? `${latestMeasurement.weightKg} kg`
+                : "Not set"
+            }
           />
           <MetricCard
             label="Target weight"
-            value={primaryGoal?.targetWeightKg ? `${primaryGoal.targetWeightKg} kg` : "Flexible"}
+            value={
+              primaryGoal?.targetWeightKg
+                ? `${primaryGoal.targetWeightKg} kg`
+                : "Flexible"
+            }
           />
           <MetricCard
             label="Height"
@@ -92,11 +100,11 @@ export default async function DashboardPage() {
             Profile ready
           </p>
           <h2 className="mt-3 text-2xl font-semibold">
-            Your FitForge starting point is saved.
+            Your dashboard shell is protected.
           </h2>
           <p className="mt-3 max-w-2xl leading-7 text-muted-foreground">
-            The next increment will turn this profile into a weekly training plan,
-            meal guidance and daily dashboard actions instead of generic empty states.
+            Next we’ll replace this placeholder with onboarding-driven protein,
+            meals, workouts, water and progress data.
           </p>
         </section>
       </div>

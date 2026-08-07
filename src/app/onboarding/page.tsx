@@ -50,7 +50,9 @@ export default async function OnboardingPage() {
         <form action={completeOnboarding} className="space-y-6">
           <section className="grid gap-6 rounded-3xl border bg-background p-6 shadow-sm sm:grid-cols-2 sm:p-8">
             <div className="sm:col-span-2">
-              <p className="text-sm font-medium text-muted-foreground">Step 1 of 3</p>
+              <p className="text-sm font-medium text-muted-foreground">
+                Step 1 of 3
+              </p>
               <h2 className="mt-1 text-2xl font-semibold">Starting point</h2>
             </div>
 
@@ -108,8 +110,12 @@ export default async function OnboardingPage() {
 
           <section className="space-y-6 rounded-3xl border bg-background p-6 shadow-sm sm:p-8">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Step 2 of 3</p>
-              <h2 className="mt-1 text-2xl font-semibold">Training direction</h2>
+              <p className="text-sm font-medium text-muted-foreground">
+                Step 2 of 3
+              </p>
+              <h2 className="mt-1 text-2xl font-semibold">
+                Training direction
+              </h2>
             </div>
 
             <fieldset className="space-y-3">
@@ -120,7 +126,12 @@ export default async function OnboardingPage() {
                     key={goal.value}
                     className="flex cursor-pointer items-center gap-3 rounded-2xl border p-4 hover:bg-muted/50"
                   >
-                    <input required type="radio" name="goalType" value={goal.value} />
+                    <input
+                      required
+                      type="radio"
+                      name="goalType"
+                      value={goal.value}
+                    />
                     <span className="text-sm font-medium">{goal.label}</span>
                   </label>
                 ))}
@@ -146,7 +157,9 @@ export default async function OnboardingPage() {
 
           <section className="space-y-7 rounded-3xl border bg-background p-6 shadow-sm sm:p-8">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Step 3 of 3</p>
+              <p className="text-sm font-medium text-muted-foreground">
+                Step 3 of 3
+              </p>
               <h2 className="mt-1 text-2xl font-semibold">Make it practical</h2>
             </div>
 
@@ -170,14 +183,20 @@ export default async function OnboardingPage() {
             </fieldset>
 
             <fieldset className="space-y-3">
-              <legend className="text-sm font-medium">Equipment available</legend>
+              <legend className="text-sm font-medium">
+                Equipment available
+              </legend>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {equipmentOptions.map((option) => (
                   <label
                     key={option.value}
                     className="flex cursor-pointer items-center gap-3 rounded-2xl border p-4 hover:bg-muted/50"
                   >
-                    <input type="checkbox" name="equipment" value={option.value} />
+                    <input
+                      type="checkbox"
+                      name="equipment"
+                      value={option.value}
+                    />
                     <span className="text-sm font-medium">{option.label}</span>
                   </label>
                 ))}

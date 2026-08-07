@@ -33,6 +33,16 @@ const goalValues = fitnessGoals.map((goal) => goal.value) as [
   ...(typeof fitnessGoals)[number]["value"][],
 ];
 
+const dietaryValues = dietaryOptions.map((option) => option.value) as [
+  (typeof dietaryOptions)[number]["value"],
+  ...(typeof dietaryOptions)[number]["value"][],
+];
+
+const equipmentValues = equipmentOptions.map((option) => option.value) as [
+  (typeof equipmentOptions)[number]["value"],
+  ...(typeof equipmentOptions)[number]["value"][],
+];
+
 export const onboardingSchema = z.object({
   dateOfBirth: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Enter a valid date"),
   heightCm: z.coerce.number().min(100).max(250),
@@ -40,8 +50,8 @@ export const onboardingSchema = z.object({
   targetWeightKg: z.coerce.number().min(25).max(350).optional(),
   goalType: z.enum(goalValues),
   workoutDaysPerWeek: z.coerce.number().int().min(1).max(7),
-  dietaryPreferences: z.array(z.string()).default([]),
-  equipment: z.array(z.string()).default([]),
+  dietaryPreferences: z.array(z.enum(dietaryValues)).default([]),
+  equipment: z.array(z.enum(equipmentValues)).default([]),
 });
 
 export type OnboardingInput = z.infer<typeof onboardingSchema>;

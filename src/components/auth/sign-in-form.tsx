@@ -69,7 +69,10 @@ export function SignInForm() {
       </div>
 
       {errorMessage ? (
-        <p className="rounded-xl bg-destructive/10 px-4 py-3 text-sm text-destructive" role="alert">
+        <p
+          className="rounded-xl bg-destructive/10 px-4 py-3 text-sm text-destructive"
+          role="alert"
+        >
           {errorMessage}
         </p>
       ) : null}
@@ -84,7 +87,10 @@ export function SignInForm() {
 
       <p className="text-center text-sm text-muted-foreground">
         New to FitForge?{" "}
-        <Link className="font-medium text-foreground underline underline-offset-4" href="/sign-up">
+        <Link
+          className="font-medium text-foreground underline underline-offset-4"
+          href="/sign-up"
+        >
           Create an account
         </Link>
       </p>
