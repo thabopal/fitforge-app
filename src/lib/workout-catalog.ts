@@ -23,7 +23,8 @@ export const starterExercises: StarterExercise[] = [
     name: "Push-up",
     category: "strength",
     categoryLabel: "Strength",
-    instructions: "Keep a straight body line, lower under control, then press the floor away.",
+    instructions:
+      "Keep a straight body line, lower under control, then press the floor away.",
     difficulty: "beginner",
     movementPattern: "push",
     equipment: ["bodyweight"],
@@ -33,7 +34,8 @@ export const starterExercises: StarterExercise[] = [
     name: "Dumbbell Floor Press",
     category: "strength",
     categoryLabel: "Strength",
-    instructions: "Lie on the floor, brace your torso, lower the dumbbells with control and press up.",
+    instructions:
+      "Lie on the floor, brace your torso, lower the dumbbells with control and press up.",
     difficulty: "beginner",
     movementPattern: "push",
     equipment: ["dumbbells"],
@@ -43,7 +45,8 @@ export const starterExercises: StarterExercise[] = [
     name: "Dumbbell Row",
     category: "strength",
     categoryLabel: "Strength",
-    instructions: "Brace your torso and pull the dumbbell toward your hip without twisting your trunk.",
+    instructions:
+      "Brace your torso and pull the dumbbell toward your hip without twisting your trunk.",
     difficulty: "beginner",
     movementPattern: "pull",
     equipment: ["dumbbells"],
@@ -53,7 +56,8 @@ export const starterExercises: StarterExercise[] = [
     name: "Reverse Fly",
     category: "strength",
     categoryLabel: "Strength",
-    instructions: "Hinge slightly, keep a soft elbow bend and open the arms until the upper back contracts.",
+    instructions:
+      "Hinge slightly, keep a soft elbow bend and open the arms until the upper back contracts.",
     difficulty: "beginner",
     movementPattern: "pull",
     equipment: ["dumbbells", "resistance-bands"],
@@ -63,7 +67,8 @@ export const starterExercises: StarterExercise[] = [
     name: "Biceps Curl",
     category: "strength",
     categoryLabel: "Strength",
-    instructions: "Keep your elbows close to your sides and curl without swinging your torso.",
+    instructions:
+      "Keep your elbows close to your sides and curl without swinging your torso.",
     difficulty: "beginner",
     movementPattern: "isolation",
     equipment: ["dumbbells", "resistance-bands"],
@@ -73,7 +78,8 @@ export const starterExercises: StarterExercise[] = [
     name: "Shoulder Press",
     category: "strength",
     categoryLabel: "Strength",
-    instructions: "Brace your core and press the weights overhead without overextending your lower back.",
+    instructions:
+      "Brace your core and press the weights overhead without overextending your lower back.",
     difficulty: "beginner",
     movementPattern: "push",
     equipment: ["dumbbells", "barbell"],
@@ -83,7 +89,8 @@ export const starterExercises: StarterExercise[] = [
     name: "Lateral Raise",
     category: "strength",
     categoryLabel: "Strength",
-    instructions: "Raise the weights to about shoulder height with control and avoid shrugging.",
+    instructions:
+      "Raise the weights to about shoulder height with control and avoid shrugging.",
     difficulty: "beginner",
     movementPattern: "isolation",
     equipment: ["dumbbells", "resistance-bands"],
@@ -93,7 +100,8 @@ export const starterExercises: StarterExercise[] = [
     name: "Bodyweight Squat",
     category: "strength",
     categoryLabel: "Strength",
-    instructions: "Sit down between your hips while keeping your feet planted and knees tracking over your toes.",
+    instructions:
+      "Sit down between your hips while keeping your feet planted and knees tracking over your toes.",
     difficulty: "beginner",
     movementPattern: "squat",
     equipment: ["bodyweight"],
@@ -103,7 +111,8 @@ export const starterExercises: StarterExercise[] = [
     name: "Goblet Squat",
     category: "strength",
     categoryLabel: "Strength",
-    instructions: "Hold one dumbbell close to your chest, squat under control and drive through the floor.",
+    instructions:
+      "Hold one dumbbell close to your chest, squat under control and drive through the floor.",
     difficulty: "beginner",
     movementPattern: "squat",
     equipment: ["dumbbells"],
@@ -113,7 +122,8 @@ export const starterExercises: StarterExercise[] = [
     name: "Romanian Deadlift",
     category: "strength",
     categoryLabel: "Strength",
-    instructions: "Push the hips back with a neutral spine, keep the load close, then stand tall by extending the hips.",
+    instructions:
+      "Push the hips back with a neutral spine, keep the load close, then stand tall by extending the hips.",
     difficulty: "intermediate",
     movementPattern: "hinge",
     equipment: ["dumbbells", "barbell"],
@@ -123,7 +133,8 @@ export const starterExercises: StarterExercise[] = [
     name: "Reverse Lunge",
     category: "strength",
     categoryLabel: "Strength",
-    instructions: "Step back into a controlled lunge and drive through the front foot to return to standing.",
+    instructions:
+      "Step back into a controlled lunge and drive through the front foot to return to standing.",
     difficulty: "beginner",
     movementPattern: "lunge",
     equipment: ["bodyweight", "dumbbells"],
@@ -133,7 +144,8 @@ export const starterExercises: StarterExercise[] = [
     name: "Calf Raise",
     category: "strength",
     categoryLabel: "Strength",
-    instructions: "Rise onto the balls of your feet, pause briefly at the top and lower under control.",
+    instructions:
+      "Rise onto the balls of your feet, pause briefly at the top and lower under control.",
     difficulty: "beginner",
     movementPattern: "isolation",
     equipment: ["bodyweight", "dumbbells"],
@@ -143,7 +155,8 @@ export const starterExercises: StarterExercise[] = [
     name: "Plank",
     category: "core",
     categoryLabel: "Core",
-    instructions: "Brace your trunk and keep your head, ribs, hips and heels in a straight line.",
+    instructions:
+      "Brace your trunk and keep your head, ribs, hips and heels in a straight line.",
     difficulty: "beginner",
     movementPattern: "anti_rotation",
     equipment: ["bodyweight"],
@@ -153,7 +166,8 @@ export const starterExercises: StarterExercise[] = [
     name: "Bicycle Crunch",
     category: "core",
     categoryLabel: "Core",
-    instructions: "Rotate through the trunk slowly while alternating the knees; avoid pulling on your neck.",
+    instructions:
+      "Rotate through the trunk slowly while alternating the knees; avoid pulling on your neck.",
     difficulty: "beginner",
     movementPattern: "rotation",
     equipment: ["bodyweight"],
