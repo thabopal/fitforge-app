@@ -1,4 +1,4 @@
-import { and, desc, eq, gte } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -128,12 +128,22 @@ export default async function ProgressPage() {
         </header>
 
         <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <Metric label="This week" value={`${thisWeekSessions.length} workouts`} />
-          <Metric label="Completed" value={`${completedSessions.length} sessions`} />
+          <Metric
+            label="This week"
+            value={`${thisWeekSessions.length} workouts`}
+          />
+          <Metric
+            label="Completed"
+            value={`${completedSessions.length} sessions`}
+          />
           <Metric label="Logged sets" value={String(totalSets)} />
           <Metric
             label="Training volume"
-            value={totalVolumeKg > 0 ? `${Math.round(totalVolumeKg).toLocaleString()} kg` : "No weighted sets yet"}
+            value={
+              totalVolumeKg > 0
+                ? `${Math.round(totalVolumeKg).toLocaleString()} kg`
+                : "No weighted sets yet"
+            }
           />
         </section>
 
@@ -159,7 +169,9 @@ export default async function ProgressPage() {
                         className="flex items-center justify-between gap-4 border-t pt-3 first:border-0 first:pt-0"
                       >
                         <div>
-                          <p className="text-sm font-medium">Set {set.setNumber}</p>
+                          <p className="text-sm font-medium">
+                            Set {set.setNumber}
+                          </p>
                           <p className="text-xs text-muted-foreground">
                             {set.date.toLocaleDateString()}
                           </p>
@@ -185,7 +197,9 @@ export default async function ProgressPage() {
           <h2 className="mt-2 text-2xl font-semibold">Completed workouts</h2>
           <div className="mt-5 space-y-3">
             {completedSessions.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No completed workouts yet.</p>
+              <p className="text-sm text-muted-foreground">
+                No completed workouts yet.
+              </p>
             ) : (
               completedSessions.map((item) => (
                 <div
@@ -195,7 +209,11 @@ export default async function ProgressPage() {
                   <div>
                     <p className="font-medium">{item.name}</p>
                     <p className="text-sm text-muted-foreground">
-                      {item.startedAt.toLocaleDateString()} · {item.startedAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      {item.startedAt.toLocaleDateString()} ·{" "}
+                      {item.startedAt.toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </p>
                   </div>
                   <span className="rounded-full bg-muted px-3 py-1 text-xs font-medium">
