@@ -1,5 +1,6 @@
-import { and, asc, desc, eq, isNull } from "drizzle-orm";
+import { and, asc, desc, eq, gte, isNull } from "drizzle-orm";
 import { headers } from "next/headers";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { SignOutButton } from "@/components/auth/sign-out-button";
@@ -17,6 +18,16 @@ import {
 import { auth } from "@/server/auth";
 import { startWorkoutSession } from "@/server/workout-session";
 import { fitnessGoals } from "@/validation/onboarding";
+
+function startOfWeek() {
+  const now = new Date();
+  const day = now.getDay();
+  const diff = day === 0 ? 6 : day - 1;
+  const start = new Date(now);
+  start.setDate(now.getDate() - diff);
+  start.setHours(0, 0, 0, 0);
+  return start;
+}
 
 export default async function DashboardPage() {
   const session = await auth.api.getSession({
@@ -115,6 +126,17 @@ export default async function DashboardPage() {
     .orderBy(desc(workoutSessions.startedAt))
     .limit(5);
 
+  const completedThisWeek = await db
+    .select({ id: workoutSessions.id })
+    .from(workoutSessions)
+    .where(
+      and(
+        eq(workoutSessions.userId, session.user.id),
+        eq(workoutSessions.status, "completed"),
+        gte(workoutSessions.startedAt, startOfWeek()),
+      ),
+    );
+
   const planDays = Array.from(
     planRows
       .reduce(
@@ -174,10 +196,18 @@ export default async function DashboardPage() {
               Welcome, {session.user.name}
             </h1>
           </div>
-          <SignOutButton />
+          <div className="flex items-center gap-3">
+            <Link
+              href="/progress"
+              className="rounded-xl border bg-background px-4 py-2.5 text-sm font-medium"
+            >
+              View progress
+            </Link>
+            <SignOutButton />
+          </div>
         </header>
 
-        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           <MetricCard label="Primary goal" value={goalLabel} />
           <MetricCard
             label="Current weight"
@@ -202,6 +232,10 @@ export default async function DashboardPage() {
                 ? `${activePlan.daysPerWeek} days / week`
                 : "Not generated"
             }
+          />
+          <MetricCard
+            label="This week"
+            value={`${completedThisWeek.length} completed`}
           />
         </section>
 
@@ -267,10 +301,20 @@ export default async function DashboardPage() {
         </section>
 
         <section className="rounded-3xl border bg-background p-6 shadow-sm sm:p-8">
-          <p className="text-sm font-medium uppercase tracking-[0.18em] text-muted-foreground">
-            Recent training
-          </p>
-          <h2 className="mt-3 text-2xl font-semibold">Workout history</h2>
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="text-sm font-medium uppercase tracking-[0.18em] text-muted-foreground">
+                Recent training
+              </p>
+              <h2 className="mt-3 text-2xl font-semibold">Workout history</h2>
+            </div>
+            <Link
+              href="/progress"
+              className="text-sm font-medium underline-offset-4 hover:underline"
+            >
+              See all progress
+            </Link>
+          </div>
 
           <div className="mt-5 space-y-3">
             {recentSessions.length === 0 ? (
