@@ -18,11 +18,20 @@ const focusExercises: Record<string, string[]> = {
   push: ["push-up", "dumbbell-floor-press", "shoulder-press", "lateral-raise"],
   pull: ["dumbbell-row", "reverse-fly"],
   arms: ["biceps-curl"],
-  legs: ["goblet-squat", "bodyweight-squat", "romanian-deadlift", "reverse-lunge", "calf-raise"],
+  legs: [
+    "goblet-squat",
+    "bodyweight-squat",
+    "romanian-deadlift",
+    "reverse-lunge",
+    "calf-raise",
+  ],
   core: ["plank", "bicycle-crunch"],
 };
 
-function prescription(goalType: OnboardingInput["goalType"], exerciseSlug: string) {
+function prescription(
+  goalType: OnboardingInput["goalType"],
+  exerciseSlug: string,
+) {
   if (exerciseSlug === "plank") {
     return {
       targetSets: 3,
@@ -64,7 +73,9 @@ function prescription(goalType: OnboardingInput["goalType"], exerciseSlug: strin
 
 export async function ensureStarterExerciseCatalog() {
   const categories = Array.from(
-    new Map(starterExercises.map((item) => [item.category, item.categoryLabel])).entries(),
+    new Map(
+      starterExercises.map((item) => [item.category, item.categoryLabel]),
+    ).entries(),
   );
 
   await db
@@ -75,11 +86,18 @@ export async function ensureStarterExerciseCatalog() {
   const categoryRows = await db
     .select({ id: exerciseCategories.id, slug: exerciseCategories.slug })
     .from(exerciseCategories)
-    .where(inArray(exerciseCategories.slug, categories.map(([slug]) => slug)));
+    .where(
+      inArray(
+        exerciseCategories.slug,
+        categories.map(([slug]) => slug),
+      ),
+    );
 
   const categoryIds = new Map(categoryRows.map((row) => [row.slug, row.id]));
 
-  const equipmentSlugs = Array.from(new Set(starterExercises.flatMap((item) => item.equipment)));
+  const equipmentSlugs = Array.from(
+    new Set(starterExercises.flatMap((item) => item.equipment)),
+  );
 
   await db
     .insert(equipment)
@@ -114,7 +132,12 @@ export async function ensureStarterExerciseCatalog() {
   const exerciseRows = await db
     .select({ id: exercises.id, slug: exercises.slug })
     .from(exercises)
-    .where(inArray(exercises.slug, starterExercises.map((item) => item.slug)));
+    .where(
+      inArray(
+        exercises.slug,
+        starterExercises.map((item) => item.slug),
+      ),
+    );
 
   const equipmentRows = await db
     .select({ id: equipment.id, slug: equipment.slug })
@@ -158,7 +181,10 @@ export async function generateStarterWorkoutPlan({
     .innerJoin(equipment, eq(userEquipment.equipmentId, equipment.id))
     .where(eq(userEquipment.userId, userId));
 
-  const availableEquipment = new Set(["bodyweight", ...ownedEquipmentRows.map((row) => row.slug)]);
+  const availableEquipment = new Set([
+    "bodyweight",
+    ...ownedEquipmentRows.map((row) => row.slug),
+  ]);
   const availableExercises = starterExercises.filter((item) =>
     item.equipment.some((slug) => availableEquipment.has(slug)),
   );
@@ -167,14 +193,17 @@ export async function generateStarterWorkoutPlan({
   await db
     .update(workoutPlans)
     .set({ status: "archived", endsOn: new Date(), updatedAt: new Date() })
-    .where(and(eq(workoutPlans.userId, userId), eq(workoutPlans.status, "active")));
+    .where(
+      and(eq(workoutPlans.userId, userId), eq(workoutPlans.status, "active")),
+    );
 
   const [plan] = await db
     .insert(workoutPlans)
     .values({
       userId,
       name: `${daysPerWeek}-Day ${goalType.replaceAll("_", " ")} Plan`,
-      description: "Starter plan generated from onboarding goal, training frequency and available equipment.",
+      description:
+        "Starter plan generated from onboarding goal, training frequency and available equipment.",
       goalType,
       daysPerWeek,
       status: "active",

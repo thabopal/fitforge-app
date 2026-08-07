@@ -116,44 +116,46 @@ export default async function DashboardPage() {
     .limit(5);
 
   const planDays = Array.from(
-    planRows.reduce(
-      (map, row) => {
-        const current = map.get(row.dayId) ?? {
-          id: row.dayId,
-          number: row.dayNumber,
-          name: row.dayName,
-          estimatedMinutes: row.estimatedMinutes,
-          exercises: [] as Array<{
+    planRows
+      .reduce(
+        (map, row) => {
+          const current = map.get(row.dayId) ?? {
+            id: row.dayId,
+            number: row.dayNumber,
+            name: row.dayName,
+            estimatedMinutes: row.estimatedMinutes,
+            exercises: [] as Array<{
+              name: string;
+              prescription: string;
+            }>,
+          };
+
+          if (row.exerciseName) {
+            const prescription = row.targetDurationSeconds
+              ? `${row.targetSets} × ${row.targetDurationSeconds}s`
+              : `${row.targetSets} × ${row.targetRepsMin ?? "?"}-${row.targetRepsMax ?? "?"}`;
+
+            current.exercises.push({
+              name: row.exerciseName,
+              prescription,
+            });
+          }
+
+          map.set(row.dayId, current);
+          return map;
+        },
+        new Map<
+          string,
+          {
+            id: string;
+            number: number;
             name: string;
-            prescription: string;
-          }>,
-        };
-
-        if (row.exerciseName) {
-          const prescription = row.targetDurationSeconds
-            ? `${row.targetSets} × ${row.targetDurationSeconds}s`
-            : `${row.targetSets} × ${row.targetRepsMin ?? "?"}-${row.targetRepsMax ?? "?"}`;
-
-          current.exercises.push({
-            name: row.exerciseName,
-            prescription,
-          });
-        }
-
-        map.set(row.dayId, current);
-        return map;
-      },
-      new Map<
-        string,
-        {
-          id: string;
-          number: number;
-          name: string;
-          estimatedMinutes: number | null;
-          exercises: Array<{ name: string; prescription: string }>;
-        }
-      >(),
-    ).values(),
+            estimatedMinutes: number | null;
+            exercises: Array<{ name: string; prescription: string }>;
+          }
+        >(),
+      )
+      .values(),
   );
 
   const goalLabel =
@@ -284,7 +286,11 @@ export default async function DashboardPage() {
                   <div>
                     <p className="font-medium">{item.name}</p>
                     <p className="text-sm text-muted-foreground">
-                      {item.startedAt.toLocaleDateString()} · {item.startedAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      {item.startedAt.toLocaleDateString()} ·{" "}
+                      {item.startedAt.toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </p>
                   </div>
                   <span className="rounded-full bg-muted px-3 py-1 text-xs font-medium capitalize">

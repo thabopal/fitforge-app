@@ -127,16 +127,25 @@ export async function completeWorkoutSession(formData: FormData) {
     for (let setNumber = 1; setNumber <= 10; setNumber += 1) {
       const repsRaw = formData.get(`${exercise.id}-set-${setNumber}-reps`);
       const weightRaw = formData.get(`${exercise.id}-set-${setNumber}-weight`);
-      const durationRaw = formData.get(`${exercise.id}-set-${setNumber}-duration`);
+      const durationRaw = formData.get(
+        `${exercise.id}-set-${setNumber}-duration`,
+      );
 
-      if (repsRaw === null && weightRaw === null && durationRaw === null) continue;
+      if (repsRaw === null && weightRaw === null && durationRaw === null)
+        continue;
 
       const repetitions = repsRaw ? Number(repsRaw) : null;
       const weightNumber = weightRaw ? Number(weightRaw) : null;
       const durationSeconds = durationRaw ? Number(durationRaw) : null;
 
-      const validRepetitions = repetitions !== null && Number.isFinite(repetitions) ? repetitions : null;
-      const validWeightKg = weightNumber !== null && Number.isFinite(weightNumber) ? weightNumber.toFixed(2) : null;
+      const validRepetitions =
+        repetitions !== null && Number.isFinite(repetitions)
+          ? repetitions
+          : null;
+      const validWeightKg =
+        weightNumber !== null && Number.isFinite(weightNumber)
+          ? weightNumber.toFixed(2)
+          : null;
       const validDurationSeconds =
         durationSeconds !== null && Number.isFinite(durationSeconds)
           ? durationSeconds

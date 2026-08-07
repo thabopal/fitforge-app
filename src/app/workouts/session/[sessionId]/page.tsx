@@ -1,6 +1,6 @@
 import { and, asc, eq } from "drizzle-orm";
-import Link from "next/link";
 import { headers } from "next/headers";
+import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
 import { db } from "@/db";
@@ -75,29 +75,45 @@ export default async function WorkoutSessionPage({
               {workoutSession.name}
             </h1>
             <p className="mt-2 text-sm text-muted-foreground">
-              Started {workoutSession.startedAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+              Started{" "}
+              {workoutSession.startedAt.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
             </p>
           </div>
-          <Link href="/dashboard" className="text-sm font-medium underline-offset-4 hover:underline">
+          <Link
+            href="/dashboard"
+            className="text-sm font-medium underline-offset-4 hover:underline"
+          >
             Back to dashboard
           </Link>
         </header>
 
         <form action={completeWorkoutSession} className="space-y-5">
-          <input type="hidden" name="workoutSessionId" value={workoutSession.id} />
+          <input
+            type="hidden"
+            name="workoutSessionId"
+            value={workoutSession.id}
+          />
 
           {exercises.map((exercise, exerciseIndex) => {
             const targetSets = exercise.targetSets ?? 3;
             const isTimed = Boolean(exercise.targetDurationSeconds);
 
             return (
-              <section key={exercise.id} className="rounded-3xl border bg-background p-6 shadow-sm">
+              <section
+                key={exercise.id}
+                className="rounded-3xl border bg-background p-6 shadow-sm"
+              >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
                       Exercise {exerciseIndex + 1}
                     </p>
-                    <h2 className="mt-1 text-xl font-semibold">{exercise.name}</h2>
+                    <h2 className="mt-1 text-xl font-semibold">
+                      {exercise.name}
+                    </h2>
                   </div>
                   <span className="rounded-full bg-muted px-3 py-1 text-xs font-medium">
                     {isTimed
@@ -110,8 +126,13 @@ export default async function WorkoutSessionPage({
                   {Array.from({ length: targetSets }, (_, index) => {
                     const setNumber = index + 1;
                     return (
-                      <div key={setNumber} className="grid gap-3 rounded-2xl border p-4 sm:grid-cols-[70px_1fr_1fr] sm:items-end">
-                        <div className="text-sm font-semibold">Set {setNumber}</div>
+                      <div
+                        key={setNumber}
+                        className="grid gap-3 rounded-2xl border p-4 sm:grid-cols-[70px_1fr_1fr] sm:items-end"
+                      >
+                        <div className="text-sm font-semibold">
+                          Set {setNumber}
+                        </div>
 
                         {isTimed ? (
                           <label className="space-y-1 text-sm font-medium">
@@ -120,7 +141,9 @@ export default async function WorkoutSessionPage({
                               name={`${exercise.id}-set-${setNumber}-duration`}
                               type="number"
                               min="0"
-                              defaultValue={exercise.targetDurationSeconds ?? undefined}
+                              defaultValue={
+                                exercise.targetDurationSeconds ?? undefined
+                              }
                               className="w-full rounded-xl border bg-background px-3 py-2 font-normal outline-none focus:ring-2 focus:ring-ring"
                             />
                           </label>
