@@ -60,14 +60,12 @@ export async function completeOnboarding(formData: FormData) {
       userId,
       dateOfBirth: input.dateOfBirth,
       heightCm: input.heightCm.toFixed(2),
-      onboardingCompletedAt: new Date(),
     })
     .onConflictDoUpdate({
       target: profiles.userId,
       set: {
         dateOfBirth: input.dateOfBirth,
         heightCm: input.heightCm.toFixed(2),
-        onboardingCompletedAt: new Date(),
         updatedAt: new Date(),
       },
     });
@@ -188,6 +186,11 @@ export async function completeOnboarding(formData: FormData) {
     goalType: input.goalType,
     daysPerWeek: input.workoutDaysPerWeek,
   });
+
+  await db
+    .update(profiles)
+    .set({ onboardingCompletedAt: new Date(), updatedAt: new Date() })
+    .where(eq(profiles.userId, userId));
 
   redirect("/dashboard");
 }
