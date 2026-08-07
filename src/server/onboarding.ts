@@ -15,6 +15,7 @@ import {
   userGoals,
 } from "@/db/schema";
 import { auth } from "@/server/auth";
+import { generateStarterWorkoutPlan } from "@/server/services/workout-plan-service";
 import {
   dietaryOptions,
   equipmentOptions,
@@ -59,14 +60,12 @@ export async function completeOnboarding(formData: FormData) {
       userId,
       dateOfBirth: input.dateOfBirth,
       heightCm: input.heightCm.toFixed(2),
-      onboardingCompletedAt: new Date(),
     })
     .onConflictDoUpdate({
       target: profiles.userId,
       set: {
         dateOfBirth: input.dateOfBirth,
         heightCm: input.heightCm.toFixed(2),
-        onboardingCompletedAt: new Date(),
         updatedAt: new Date(),
       },
     });
@@ -182,10 +181,16 @@ export async function completeOnboarding(formData: FormData) {
     }
   }
 
-  // Workout frequency is collected now and will feed the target/rules engine in
-  // the next increment. We intentionally avoid inventing calorie or nutrition
-  // prescriptions in this persistence action.
-  void input.workoutDaysPerWeek;
+  await generateStarterWorkoutPlan({
+    userId,
+    goalType: input.goalType,
+    daysPerWeek: input.workoutDaysPerWeek,
+  });
+
+  await db
+    .update(profiles)
+    .set({ onboardingCompletedAt: new Date(), updatedAt: new Date() })
+    .where(eq(profiles.userId, userId));
 
   redirect("/dashboard");
 }
