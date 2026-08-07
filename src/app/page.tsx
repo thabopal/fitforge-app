@@ -9,9 +9,12 @@ export default function HomePage() {
             <p className="text-sm font-medium uppercase tracking-[0.2em] text-muted-foreground">
               Build. Fuel. Improve.
             </p>
-            <h1 className="text-5xl font-semibold tracking-tight sm:text-6xl">FitForge</h1>
+            <h1 className="text-5xl font-semibold tracking-tight sm:text-6xl">
+              FitForge
+            </h1>
             <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
-              A calm fitness system for training, nutrition and progress. Start with your goals, then let FitForge make the next step obvious.
+              A calm fitness system for training, nutrition and progress. Start
+              with your goals, then let FitForge make the next step obvious.
             </p>
           </div>
 

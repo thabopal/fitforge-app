@@ -1,6 +1,8 @@
 import Link from "next/link";
 
-export default function AuthLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function AuthLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <main className="min-h-screen bg-muted/40 px-4 py-10">
       <div className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-5xl items-center justify-center">
@@ -17,10 +19,13 @@ export default function AuthLayout({ children }: Readonly<{ children: React.Reac
                 Less guesswork. A clearer next step every day.
               </h1>
               <p className="leading-7 text-background/70">
-                FitForge brings training, nutrition and progress into one calm system built around your goals.
+                FitForge brings training, nutrition and progress into one calm
+                system built around your goals.
               </p>
             </div>
-            <p className="text-sm text-background/50">Personal fitness, engineered for consistency.</p>
+            <p className="text-sm text-background/50">
+              Personal fitness, engineered for consistency.
+            </p>
           </section>
           <section className="p-6 sm:p-10 lg:p-12">{children}</section>
         </div>

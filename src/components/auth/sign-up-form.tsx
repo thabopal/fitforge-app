@@ -87,7 +87,10 @@ export function SignUpForm() {
       </div>
 
       {errorMessage ? (
-        <p className="rounded-xl bg-destructive/10 px-4 py-3 text-sm text-destructive" role="alert">
+        <p
+          className="rounded-xl bg-destructive/10 px-4 py-3 text-sm text-destructive"
+          role="alert"
+        >
           {errorMessage}
         </p>
       ) : null}
@@ -102,7 +105,10 @@ export function SignUpForm() {
 
       <p className="text-center text-sm text-muted-foreground">
         Already have an account?{" "}
-        <Link className="font-medium text-foreground underline underline-offset-4" href="/sign-in">
+        <Link
+          className="font-medium text-foreground underline underline-offset-4"
+          href="/sign-in"
+        >
           Sign in
         </Link>
       </p>
