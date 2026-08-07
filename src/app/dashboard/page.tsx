@@ -12,8 +12,10 @@ import {
   workoutDayExercises,
   workoutDays,
   workoutPlans,
+  workoutSessions,
 } from "@/db/schema";
 import { auth } from "@/server/auth";
+import { startWorkoutSession } from "@/server/workout-session";
 import { fitnessGoals } from "@/validation/onboarding";
 
 export default async function DashboardPage() {
@@ -100,6 +102,19 @@ export default async function DashboardPage() {
         .orderBy(asc(workoutDays.dayNumber), asc(workoutDayExercises.sortOrder))
     : [];
 
+  const recentSessions = await db
+    .select({
+      id: workoutSessions.id,
+      name: workoutSessions.nameSnapshot,
+      startedAt: workoutSessions.startedAt,
+      completedAt: workoutSessions.completedAt,
+      status: workoutSessions.status,
+    })
+    .from(workoutSessions)
+    .where(eq(workoutSessions.userId, session.user.id))
+    .orderBy(desc(workoutSessions.startedAt))
+    .limit(5);
+
   const planDays = Array.from(
     planRows.reduce(
       (map, row) => {
@@ -180,7 +195,11 @@ export default async function DashboardPage() {
           />
           <MetricCard
             label="Training frequency"
-            value={activePlan ? `${activePlan.daysPerWeek} days / week` : "Not generated"}
+            value={
+              activePlan
+                ? `${activePlan.daysPerWeek} days / week`
+                : "Not generated"
+            }
           />
         </section>
 
@@ -229,10 +248,52 @@ export default async function DashboardPage() {
                       </div>
                     ))}
                   </div>
+
+                  <form action={startWorkoutSession} className="mt-5">
+                    <input type="hidden" name="workoutDayId" value={day.id} />
+                    <button
+                      type="submit"
+                      className="w-full rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+                    >
+                      Start workout
+                    </button>
+                  </form>
                 </article>
               ))}
             </div>
           )}
+        </section>
+
+        <section className="rounded-3xl border bg-background p-6 shadow-sm sm:p-8">
+          <p className="text-sm font-medium uppercase tracking-[0.18em] text-muted-foreground">
+            Recent training
+          </p>
+          <h2 className="mt-3 text-2xl font-semibold">Workout history</h2>
+
+          <div className="mt-5 space-y-3">
+            {recentSessions.length === 0 ? (
+              <p className="text-sm text-muted-foreground">
+                Your completed workouts will appear here.
+              </p>
+            ) : (
+              recentSessions.map((item) => (
+                <div
+                  key={item.id}
+                  className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border p-4"
+                >
+                  <div>
+                    <p className="font-medium">{item.name}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {item.startedAt.toLocaleDateString()} · {item.startedAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                    </p>
+                  </div>
+                  <span className="rounded-full bg-muted px-3 py-1 text-xs font-medium capitalize">
+                    {item.status.replaceAll("_", " ")}
+                  </span>
+                </div>
+              ))
+            )}
+          </div>
         </section>
       </div>
     </main>
