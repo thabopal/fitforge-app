@@ -1,8 +1,12 @@
-import "dotenv/config";
+import { config } from "dotenv";
 
-import { ensureStarterExerciseCatalog } from "@/server/services/workout-plan-service";
+config({ path: ".env.local" });
 
 async function main() {
+  const { ensureStarterExerciseCatalog } = await import(
+    "@/server/services/workout-plan-service"
+  );
+
   await ensureStarterExerciseCatalog();
   console.log("FitForge starter exercise catalogue seeded.");
 }
