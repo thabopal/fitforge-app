@@ -16,6 +16,10 @@ import {
   workoutSessions,
 } from "@/db/schema";
 import { auth } from "@/server/auth";
+import {
+  calculateNutritionTargets,
+  getDailyNutritionSummary,
+} from "@/server/services/nutrition-service";
 import { startWorkoutSession } from "@/server/workout-session";
 import { fitnessGoals } from "@/validation/onboarding";
 
@@ -184,6 +188,26 @@ export default async function DashboardPage() {
     fitnessGoals.find((goal) => goal.value === primaryGoal?.goalType)?.label ??
     "Not set";
 
+  const nutritionTargets = latestMeasurement?.weightKg
+    ? calculateNutritionTargets({
+        weightKg: Number(latestMeasurement.weightKg),
+        goalType: primaryGoal?.goalType ?? null,
+      })
+    : null;
+
+  const nutritionSummary = await getDailyNutritionSummary(session.user.id);
+
+  const caloriesRemaining = nutritionTargets
+    ? Math.max(
+        0,
+        nutritionTargets.caloriesKcal - nutritionSummary.totals.caloriesKcal,
+      )
+    : 0;
+
+  const proteinRemaining = nutritionTargets
+    ? Math.max(0, nutritionTargets.proteinG - nutritionSummary.totals.proteinG)
+    : 0;
+
   return (
     <main className="min-h-screen bg-muted/30 px-6 py-10">
       <div className="mx-auto max-w-6xl space-y-8">
@@ -196,13 +220,21 @@ export default async function DashboardPage() {
               Welcome, {session.user.name}
             </h1>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
+            <Link
+              href="/nutrition"
+              className="rounded-xl border bg-background px-4 py-2.5 text-sm font-medium hover:bg-muted"
+            >
+              Nutrition
+            </Link>
+
             <Link
               href="/progress"
-              className="rounded-xl border bg-background px-4 py-2.5 text-sm font-medium"
+              className="rounded-xl border bg-background px-4 py-2.5 text-sm font-medium hover:bg-muted"
             >
               View progress
             </Link>
+
             <SignOutButton />
           </div>
         </header>
@@ -238,6 +270,61 @@ export default async function DashboardPage() {
             value={`${completedThisWeek.length} completed`}
           />
         </section>
+        {nutritionTargets && (
+          <section className="rounded-3xl border bg-background p-6 shadow-sm sm:p-8">
+            <div className="flex flex-wrap items-start justify-between gap-5">
+              <div>
+                <p className="text-sm font-medium uppercase tracking-[0.18em] text-muted-foreground">
+                  Today&apos;s nutrition
+                </p>
+
+                <h2 className="mt-3 text-2xl font-semibold">Fuel the work.</h2>
+
+                <p className="mt-2 text-sm text-muted-foreground">
+                  {caloriesRemaining} kcal and {proteinRemaining} g protein
+                  remaining today.
+                </p>
+              </div>
+
+              <Link
+                href="/nutrition"
+                className="rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+              >
+                Log food
+              </Link>
+            </div>
+
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <NutritionSummaryCard
+                label="Calories"
+                consumed={nutritionSummary.totals.caloriesKcal}
+                target={nutritionTargets.caloriesKcal}
+                unit="kcal"
+              />
+
+              <NutritionSummaryCard
+                label="Protein"
+                consumed={nutritionSummary.totals.proteinG}
+                target={nutritionTargets.proteinG}
+                unit="g"
+              />
+
+              <NutritionSummaryCard
+                label="Carbs"
+                consumed={nutritionSummary.totals.carbohydrateG}
+                target={nutritionTargets.carbohydrateG}
+                unit="g"
+              />
+
+              <NutritionSummaryCard
+                label="Fat"
+                consumed={nutritionSummary.totals.fatG}
+                target={nutritionTargets.fatG}
+                unit="g"
+              />
+            </div>
+          </section>
+        )}
 
         <section className="rounded-3xl border bg-background p-6 shadow-sm sm:p-8">
           <p className="text-sm font-medium uppercase tracking-[0.18em] text-muted-foreground">
@@ -355,6 +442,44 @@ function MetricCard({ label, value }: { label: string; value: string }) {
     <div className="rounded-3xl border bg-background p-6 shadow-sm">
       <p className="text-sm text-muted-foreground">{label}</p>
       <p className="mt-2 text-xl font-semibold">{value}</p>
+    </div>
+  );
+}
+
+function NutritionSummaryCard({
+  label,
+  consumed,
+  target,
+  unit,
+}: {
+  label: string;
+  consumed: number;
+  target: number;
+  unit: string;
+}) {
+  const percentage =
+    target > 0 ? Math.min(100, Math.round((consumed / target) * 100)) : 0;
+
+  return (
+    <div className="rounded-2xl border p-4">
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-sm text-muted-foreground">{label}</p>
+        <span className="text-xs text-muted-foreground">{percentage}%</span>
+      </div>
+
+      <p className="mt-2 font-semibold">
+        {consumed}{" "}
+        <span className="text-sm font-normal text-muted-foreground">
+          / {target} {unit}
+        </span>
+      </p>
+
+      <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-muted">
+        <div
+          className="h-full rounded-full bg-primary"
+          style={{ width: `${percentage}%` }}
+        />
+      </div>
     </div>
   );
 }
