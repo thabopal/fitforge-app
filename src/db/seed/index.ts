@@ -2,16 +2,24 @@ import { config } from "dotenv";
 
 config({ path: ".env.local" });
 
-async function main() {
+async function seed() {
+  const { ensureStarterFoodCatalog } = await import(
+    "@/server/services/nutrition-catalog-service"
+  );
+
   const { ensureStarterExerciseCatalog } = await import(
     "@/server/services/workout-plan-service"
   );
 
+  console.log("Seeding FitForge...");
+
   await ensureStarterExerciseCatalog();
-  console.log("FitForge starter exercise catalogue seeded.");
+  await ensureStarterFoodCatalog();
+
+  console.log("Seed complete.");
 }
 
-main().catch((error) => {
-  console.error("Failed to seed FitForge catalogue", error);
-  process.exitCode = 1;
+seed().catch((error) => {
+  console.error(error);
+  process.exit(1);
 });
