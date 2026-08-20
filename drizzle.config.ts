@@ -3,8 +3,12 @@ import { defineConfig } from "drizzle-kit";
 
 config({ path: ".env.local" });
 
-if (!process.env.DATABASE_URL) {
-  throw new Error("DATABASE_URL is missing from .env.local");
+const databaseUrl = process.env.DIRECT_DATABASE_URL ?? process.env.DATABASE_URL;
+
+if (!databaseUrl) {
+  throw new Error(
+    "DIRECT_DATABASE_URL or DATABASE_URL is missing from .env.local",
+  );
 }
 
 export default defineConfig({
@@ -12,7 +16,7 @@ export default defineConfig({
   out: "./src/db/migrations",
   dialect: "postgresql",
   dbCredentials: {
-    url: process.env.DATABASE_URL,
+    url: databaseUrl,
   },
   strict: true,
   verbose: true,
